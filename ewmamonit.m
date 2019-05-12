@@ -1,4 +1,4 @@
-function [T2,Snow,thetanow,t,Itr,defect,Tte,gammaauto] = ewmamonit( Y,B,Bs,lambda,allgamma,varargin)
+function [T2,Snow,Yhat,t,Itr,defect,Tte] = ewmamonit( Y,B,Bs,lambda,allgamma,varargin)
 % parameters
 lambdat = lambda(end);
 lambdaxy = lambda(1:end-1);
@@ -50,7 +50,7 @@ elseif length(Bs) == 2
     LL = 2*norm(Bs{1})^2*norm(Bs{2})^2;
     isOrth = 2;
     X = zeros(size(Bs{1},2),size(Bs{2},2));
-    BetaS = zeros(size(Bs{1},2),size(Bs{2},2));
+    BetaS = zeros(size(Bs{1},2),ze(Bs{2},2));
 
 end
 
@@ -103,20 +103,20 @@ for t = 1:nT
         y = chooseI(Y,t);
         if t==1
             if ndim == 2
-                thetanow = H{1}*(chooseI(Y,1));
+                Yhat = H{1}*(chooseI(Y,1));
             elseif ndim == 3
-                thetanow = H{1}*(chooseI(Y,1))*H{2};
+                Yhat = H{1}*(chooseI(Y,1))*H{2};
             elseif ndim >= 4
-                thetanow = double(ttm(tensor(chooseI(Y,1)),H));
+                Yhat = double(ttm(tensor(chooseI(Y,1)),H));
             end
             %if issave
-            %    thetaall{i,1} = thetanow;
+            %    thetaall{i,1} = Yhat;
             %end
         else
             Snow = 0;
             Snowold = 1;
             iiter = 0;
-            thetaold = thetanow;
+            thetaold = Yhat;
             while iiter <maxIter
                 iiter = iiter +1;
                 Snowold = Snow;
@@ -130,14 +130,14 @@ for t = 1:nT
                     elseif ndim >= 4
                         yhat = double(ttm(tensor(y-Snow),H));
                     end
-                    thetanow = lambdat1*yhat+(1-lambdat1)*thetaold;
+                    Yhat = lambdat1*yhat+(1-lambdat1)*thetaold;
                 else
-                    thetanow = lambdat1*(y-Snow)+(1-lambdat1)*thetaold;
+                    Yhat = lambdat1*(y-Snow)+(1-lambdat1)*thetaold;
                 end
                 if isempty(Bs)
-                    Snow = wthresh(y - thetanow,type,allgamma(i));                
+                    Snow = wthresh(y - Yhat,type,allgamma(i));                
                 else
-                    BetaSe = X + 2/LL*Bs{1}'*(y -Bs{1}*X*Bs{2}' - thetanow)*Bs{2};
+                    BetaSe = X + 2/LL*Bs{1}'*(y -Bs{1}*X*Bs{2}' - Yhat)*Bs{2};
                     BetaS = wthresh(BetaSe,type,allgamma(i)/LL); % sign(BetaSe) .* plus0(abs(BetaSe)- gamma/L);
                     Snow = Bs{1} *BetaS* Bs{2}';
                     tnew = (1+sqrt(1+4*told^2))/2;
@@ -149,29 +149,29 @@ for t = 1:nT
                 end
             end
 %            if issave
-%                thetaall{i,t} = thetanow;
+%                thetaall{i,t} = Yhat;
 %           end
         end
         if isempty(Bs)
-            Ye = (y - thetanow);
+            Ye = (y - Yhat);
             maxYe = max(abs(Ye(:)));
-            gammaauto = 2*graythresh(abs(Ye)/maxYe)*maxYe;
+            % gammaauto = 2*graythresh(abs(Ye)/maxYe)*maxYe;
             d = wthresh(Ye,type,allgamma(i));
             
         else
-            BetaSe = BetaS + 2/LL*Bs{1}'*(y -Bs{1}*BetaS*Bs{2}' - thetanow)*Bs{2};
+            BetaSe = BetaS + 2/LL*Bs{1}'*(y -Bs{1}*BetaS*Bs{2}' - Yhat)*Bs{2};
             BetaS = wthresh(BetaSe,type,allgamma(i)/LL); % sign(BetaSe) .* plus0(abs(BetaSe)- gamma/L);
             Snow = Bs{1} *BetaS* Bs{2}';
             d = Snow; 
         end
         
-        T2(i,t) = (sum(vec(d.*(y - thetanow))))^2/(sum(vec(d.*d)));
+        T2(i,t) = (sum(vec(d.*(y - Yhat))))^2/(sum(vec(d.*d)));
         %if issave
         %    Sall{i,t} = d;
         %end
         dall{i} = d;
-        thetai{i} = thetanow;
-        e(i) = sum(sum((y-d-thetanow).^2)) + 2*sum(sum(d~=0));
+        thetai{i} = Yhat;
+        e(i) = sum(sum((y-d-Yhat).^2)) + 2*sum(sum(d~=0));
     end
 
     if L % Check for Control Limit
@@ -201,11 +201,11 @@ end
 
 if issave==1
     Snow = Sall;
-    thetanow = thetaall;
+    Yhat = thetaall;
 else issave == 2
 %     [~,Itr]= min(e);
     Snow = dall;
-    thetanow = thetai;
+    Yhat = thetai;
 
 end
     

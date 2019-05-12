@@ -5,24 +5,31 @@ allgamma = [1e-2 1 2 3 5 9 11 30 50 90 120 160 200 240 280 320];
 lambda = [0.1 0.1 0.6];
 nx = size(Y,1);
 ny = size(Y,2);
+nt = size(Y,3);
 kx = 50; ky = 50; kt = 3;
 sdx = 3; sdy = 3; sdt = 3;
 
+%%
 % B{1} = [];
 % B{2} = [];
+% You need specify the number of knots based on how smooth is the
+% background (kx,ky) and how large is your anomaly (skx,sky)
 B{1} = bsplineBasis(nx,kx,sdx);
 B{2} = bsplineBasis(ny,ky,sdy);
-Bs{1} = bsplineBasis(nx,round(nx/2),1);
-Bs{2} = bsplineBasis(ny,round(ny/2),1);
+skx = round(nx/2);
+sky = round(nx/2);
+Bs{1} = bsplineBasis(nx,skx,1);
+Bs{2} = bsplineBasis(ny,sky,1);
 
 
-[T2,S,theta]=ewmamonit(Y,B,[],lambda,allgamma,'maxIter',3,'issave',1,'type','h');
+[T2,Snow,Yhat,t,Itr,defect,Tte] =ewmamonit(Y,B,[],lambda,allgamma,'maxIter',3,'issave',1,'type','h');
 %%
 T2tr=T2;
 [ mT2,sd,Ttr,Itr] = chartIC( T2tr(:,1:100));
 [ Ttr,Itr] = chartOC( T2tr,mT2,sd)
 L = max(Ttr(1:150));
 [ Ttr,Itr] = chartOC( T2tr,mT2,sd)
+
 %%
 
 odx = find(Ttr>L);
