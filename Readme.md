@@ -2,7 +2,8 @@ This is a MATLAB code for paper "Real-time monitoring of high-dimensional functi
 
 Here is the [link](https://www.tandfonline.com/doi/abs/10.1080/00401706.2017.1346522) for the paper. 
 
-
+Data: 
+1. `data.mat`, solar flare dataset
 
 File description: 
 
