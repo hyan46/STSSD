@@ -3,7 +3,7 @@ This is a MATLAB code for paper "Real-time monitoring of high-dimensional functi
 Related work: Anomaly Detection in Images with Smooth
 Background Via Smooth-Sparse Decomposition with [paper link](https://www.researchgate.net/profile/Hao_Yan4/publication/283520589_Anomaly_Detection_in_Images_with_Smooth_Background_Via_Smooth-Sparse_Decomposition/links/57a87b3508aed76703f63e1a/Anomaly-Detection-in-Images-with-Smooth-Background-Via-Smooth-Sparse-Decomposition.pdf) and [code](https://github.com/hyan46/SSD). 
 
-[![Rolling Detection](http://i.imgur.com/Ot5DWAW.png)](https://www.youtube.com/watch?v=9qPLl8Fg3S4)
+[![Rolling Detection](rolling.png)](https://www.youtube.com/watch?v=9qPLl8Fg3S4)
 
 
 
