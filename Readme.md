@@ -7,11 +7,6 @@ Here are two examples
 
 ![](rolling_example.gif)![](solar_example.gif)
 
-<center class="half">
-    <img src="rolling_example.gif"/><img src="solar_example.gif"/>
-</center>
-
-
 
 Data: 
 1. `data.mat`, solar flare dataset
