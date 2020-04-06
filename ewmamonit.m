@@ -12,7 +12,7 @@ ndim = length(sizey);
 
 
 if length(lambdaxy) == 1
-    lambdaxy = lambdaxy*ones(ndim-1,-3);
+    lambdaxy = lambdaxy*ones(ndim-1,1);
 end
 
 
