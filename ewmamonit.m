@@ -50,7 +50,7 @@ elseif length(Bs) == 2
     LL = 2*norm(Bs{1})^2*norm(Bs{2})^2;
     isOrth = 2;
     X = zeros(size(Bs{1},2),size(Bs{2},2));
-    BetaS = zeros(size(Bs{1},2),ze(Bs{2},2));
+    BetaS = zeros(size(Bs{1},2),size(Bs{2},2));
 
 end
 
